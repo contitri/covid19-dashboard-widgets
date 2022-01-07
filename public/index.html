@@ -166,7 +166,7 @@
 
               <!-- mimic complete integration inside a tab -->
               <div class="box fr-mt-6w">
-                <div id="tabpanel-0-2-panel" class="fr-tabs__panel fr-p-3w fr-tabs__panel--selected" role="tabpanel" aria-labelledby="tabpanel-0-2" tabindex="0" style="">
+                <div id="tabpanel-0-2-panel" class="fr-tabs__panel fr-p-3w fr-tabs__panel--selected" role="tabpanel" aria-labelledby="tabpanel-0-2" tabindex="0">
                   <map-chart indicateur="taux_incidence"></map-chart>
                 </div>
               </div>
@@ -240,6 +240,14 @@
               </div>
 
               <div class="chart_container">
+                <stacked-bar-chart indicateurs="vaccins_premiere_dose vaccins_vaccines vaccins_rappel"></stacked-bar-chart>
+              </div>
+
+              <div class="chart_container">
+                <pie-chart indicateurs="vaccins_premiere_dose vaccins_vaccines vaccins_rappel"></pie-chart>
+              </div>
+
+              <div class="chart_container">
                 <new-multiline-chart indicateurs="vaccins_premiere_dose vaccins_vaccines vaccins_rappel" periods = "vaccin_rappel"></new-multiline-chart>
               </div>   
               
@@ -296,11 +304,11 @@
               </div>
 
               <div class="chart_container">
-                <line-chart indicateur="prop_variant_B"></line-chart>
+                <line-chart indicateur="prop_variant_D"></line-chart>
               </div>     
 
               <div class="chart_container">
-                <new-multiline-chart indicateurs="prop_variant_A prop_variant_B prop_variant_C"></new-multiline-chart>
+                <new-multiline-chart indicateurs="prop_variant_A prop_variant_C prop_variant_A0C0"></new-multiline-chart>
               </div>        
 
               <div class="chart_container">
@@ -313,6 +321,14 @@
 
               <div class="chart_container">
                 <new-multiline-chart indicateurs="pos_test_non_vacsi pos_test_vacsi"></new-multiline-chart>
+              </div>
+
+              <div class="chart_container">
+                <new-multiline-chart indicateurs="sc_non_vacsi_20ans sc_vacsi_20ans"></new-multiline-chart>
+              </div>
+
+              <div class="chart_container">
+                <new-multiline-chart indicateurs="pos_test_non_vacsi_20ans pos_test_vacsi_20ans"></new-multiline-chart>
               </div>
 
               <div class="chart_container">

@@ -13,6 +13,8 @@ import GeoList from './components/GeoList'
 import ThreeLineChart from './components/ThreeLineChart'
 import NewMultiLineChart from './components/NewMultiLineChart'
 import BarLineChart from './components/BarLineChart'
+import StackedBarChart from './components/StackedBarChart'
+import PieChart from './components/PieChart'
 
 import vueCustomElement from 'vue-custom-element'
 Vue.use(getData(store))
@@ -31,3 +33,5 @@ Vue.customElement('geo-list', GeoList)
 Vue.customElement('threeline-chart', ThreeLineChart)
 Vue.customElement('new-multiline-chart', NewMultiLineChart)
 Vue.customElement('bar-line-chart', BarLineChart)
+Vue.customElement('stacked-bar-chart', StackedBarChart)
+Vue.customElement('pie-chart', PieChart)
