@@ -11,27 +11,27 @@
             <div class="tooltip_value">{{convertStringToLocaleNumber(tooltip.value)}} {{units[0]}}</div>
           </div>
         </div>
-        <div class="france_container no_select">
-          <france :onclick="changeGeoLevel" :ondblclick="resetGeoFilters" :onenter="displayTooltip" :onleave="hideTooltip"></france>
+        <div class="france_container no_select" :style="{display:displayFrance}">
+          <france :props="FranceProps" :onclick="changeGeoLevel" :ondblclick="resetGeoFilters" :onenter="displayTooltip" :onleave="hideTooltip"></france>
         </div>
         <div class="om_container fr-grid-row no_select">
-          <div class="om fr-col-4 fr-col-sm">
+          <div class="om fr-col-4 fr-col-sm" :style="{display:displayGuadeloupe}">
             <span class="fr-text--xs fr-my-1w">Guadeloupe</span>
             <guadeloupe :onclick="changeGeoLevel" :ondblclick="resetGeoFilters" :onenter="displayTooltip" :onleave="hideTooltip"></guadeloupe>
           </div>
-          <div class="om fr-col-4 fr-col-sm">
+          <div class="om fr-col-4 fr-col-sm" :style="{display:displayMartinique}">
             <span class="fr-text--xs fr-my-1w">Martinique</span>
             <martinique :onclick="changeGeoLevel" :ondblclick="resetGeoFilters" :onenter="displayTooltip" :onleave="hideTooltip"></martinique>
           </div>
-          <div class="om fr-col-4 fr-col-sm">
+          <div class="om fr-col-4 fr-col-sm" :style="{display:displayGuyanne}">
             <span class="fr-text--xs fr-my-1w">Guyane</span>
             <guyane :onclick="changeGeoLevel" :ondblclick="resetGeoFilters" :onenter="displayTooltip" :onleave="hideTooltip"></guyane>
           </div>
-          <div class="om fr-col-4 fr-col-sm">
+          <div class="om fr-col-4 fr-col-sm" :style="{display:displayReunion}">
             <span class="fr-text--xs fr-my-1w">La Réunion</span>
             <reunion :onclick="changeGeoLevel" :ondblclick="resetGeoFilters" :onenter="displayTooltip" :onleave="hideTooltip"></reunion>
           </div>
-          <div class="om fr-col-4 fr-col-sm">
+          <div class="om fr-col-4 fr-col-sm" :style="{display:displayMayotte}">
             <span class="fr-text--xs fr-my-1w">Mayotte</span>
             <mayotte :onclick="changeGeoLevel" :ondblclick="resetGeoFilters" :onenter="displayTooltip" :onleave="hideTooltip"></mayotte>
           </div>
@@ -81,6 +81,9 @@ export default {
         legendDisplay: ['none'],
         opacity: [1]
       },
+      FranceProps: {
+        viewBox: '0 0 262 250'
+      },
       scaleMin: 0,
       scaleMax: 0,
       units: [],
@@ -97,7 +100,13 @@ export default {
         value: 0,
         date: '',
         place: ''
-      }
+      },
+      displayFrance: '',
+      displayGuadeloupe: '',
+      displayMartinique: '',
+      displayMayotte: '',
+      displayReunion: '',
+      displayGuyanne: ''
     }
   },
   props: {
@@ -153,38 +162,160 @@ export default {
       this.leftColProps.evolvalues.push(geoObject.evol_percentage)
       this.leftColProps.trendType = this.indicateur_data.trendType
 
-      const values = []
-
-      this.indicateur_data.departements.forEach(function (d) {
-        values.push(parseInt(d.last_value))
-      })
-
-      this.scaleMin = Math.min.apply(null, values)
-      this.scaleMax = Math.max.apply(null, values)
-
-      this.leftColProps.min = this.scaleMin
-      this.leftColProps.max = this.scaleMax
-
-      let x
-      this.indicateur_data.trendType === 'normal' ? x = d3.scaleLinear().domain([this.scaleMin, this.scaleMax]).range(['#ffc700', '#715845']) : x = d3.scaleLinear().domain([this.scaleMin, this.scaleMax]).range(['#715845', '#ffc700'])
-
       const parentWidget = document.getElementById(this.widgetId)
 
       if (geolevel === 'France') {
+        this.displayFrance = ''
+        this.displayGuadeloupe = ''
+        this.displayMartinique = ''
+        this.displayMayotte = ''
+        this.displayReunion = ''
+        this.displayGuyanne = ''
+
+        const values = []
+        this.indicateur_data.departements.forEach(function (d) {
+          values.push(parseInt(d.last_value))
+        })
+        this.scaleMin = Math.min.apply(null, values)
+        this.scaleMax = Math.max.apply(null, values)
+        this.leftColProps.min = this.scaleMin
+        this.leftColProps.max = this.scaleMax
+        let x
+        this.indicateur_data.trendType === 'normal' ? x = d3.scaleLinear().domain([this.scaleMin, this.scaleMax]).range(['#ffc700', '#715845']) : x = d3.scaleLinear().domain([this.scaleMin, this.scaleMax]).range(['#715845', '#ffc700'])
+        this.FranceProps.viewBox = '0 0 262 250'
         this.indicateur_data.departements.forEach(function (d) {
           const elCol = parentWidget.getElementsByClassName('FR-' + d.code_level)
           elCol.length !== 0 && elCol[0].setAttribute('fill', x(d.last_value))
         })
       } else if (geolevel === 'departements') {
+        this.displayFrance = 'none'
+        this.displayGuadeloupe = 'none'
+        this.displayMartinique = 'none'
+        this.displayMayotte = 'none'
+        this.displayReunion = 'none'
+        this.displayGuyanne = 'none'
+        if (self.selectedGeoCode === '971') {
+          this.displayGuadeloupe = ''
+        } else if (self.selectedGeoCode === '972') {
+          this.displayMartinique = ''
+        } else if (self.selectedGeoCode === '973') {
+          this.displayGuyanne = ''
+        } else if (self.selectedGeoCode === '974') {
+          this.displayReunion = ''
+        } else if (self.selectedGeoCode === '976') {
+          this.displayMayotte = ''
+        } else {
+          this.displayFrance = ''
+        }
+
+        const regObj = store.state.dep.find(obj => {
+          return obj.value === geocode
+        })
+        const regValue = regObj.region_value
+
+        const values = []
         this.indicateur_data.departements.forEach(function (d) {
-          const elCol = parentWidget.getElementsByClassName('FR-' + d.code_level)
-          if (d.code_level === geocode) {
-            elCol.length !== 0 && elCol[0].setAttribute('fill', x(d.last_value))
-          } else {
-            elCol.length !== 0 && elCol[0].setAttribute('fill', 'rgba(247, 237, 211, 0.72)')
+          const regDep = store.state.dep.find(obj => {
+            return obj.value === d.code_level
+          })
+          if (regDep !== undefined) {
+            const reg = regDep.region_value
+
+            if (reg === regValue) {
+              values.push(parseInt(d.last_value))
+            }
           }
         })
+        this.scaleMin = Math.min.apply(null, values)
+        this.scaleMax = Math.max.apply(null, values)
+        this.leftColProps.min = this.scaleMin
+        this.leftColProps.max = this.scaleMax
+        let x
+        this.indicateur_data.trendType === 'normal' ? x = d3.scaleLinear().domain([this.scaleMin, this.scaleMax]).range(['#ffc700', '#715845']) : x = d3.scaleLinear().domain([this.scaleMin, this.scaleMax]).range(['#715845', '#ffc700'])
+
+        this.indicateur_data.departements.forEach(function (d) {
+          const elCol = parentWidget.getElementsByClassName('FR-' + d.code_level)
+          const regDep = store.state.dep.find(obj => {
+            return obj.value === d.code_level
+          })
+          if (regDep !== undefined) {
+            const reg = regDep.region_value
+            if (d.code_level === geocode) {
+              elCol.length !== 0 && elCol[0].setAttribute('fill', x(d.last_value))
+            } else if (reg === regValue) {
+              elCol.length !== 0 && elCol[0].setAttribute('fill', 'rgba(247, 237, 211, 0.72)')
+            } else {
+              elCol.length !== 0 && elCol[0].setAttribute('fill', 'rgba(255, 255, 255, 0)')
+            }
+          }
+        })
+
+        const allDep = store.state.dep.filter(obj => {
+          return obj.region_value === regValue
+        })
+
+        let xmin = []
+        let ymin = []
+        let xmax = []
+        let ymax = []
+
+        allDep.forEach(function (dep) {
+          const polygon = document.querySelector('.FR-' + dep.value).getBBox()
+
+          xmin.push(polygon.x)
+          ymin.push(polygon.y)
+          xmax.push(polygon.x + polygon.width)
+          ymax.push(polygon.y + polygon.height)
+        })
+
+        xmin = Math.min.apply(null, xmin)
+        ymin = Math.min.apply(null, ymin)
+        xmax = Math.max.apply(null, xmax)
+        ymax = Math.max.apply(null, ymax)
+        const width = xmax - xmin
+        const height = ymax - ymin
+
+        this.FranceProps.viewBox = xmin + ' ' + ymin + ' ' + width + ' ' + height
       } else {
+        this.displayFrance = 'none'
+        this.displayGuadeloupe = 'none'
+        this.displayMartinique = 'none'
+        this.displayMayotte = 'none'
+        this.displayReunion = 'none'
+        this.displayGuyanne = 'none'
+        if (self.selectedGeoCode === '01') {
+          this.displayGuadeloupe = ''
+        } else if (self.selectedGeoCode === '02') {
+          this.displayMartinique = ''
+        } else if (self.selectedGeoCode === '03') {
+          this.displayGuyanne = ''
+        } else if (self.selectedGeoCode === '04') {
+          this.displayReunion = ''
+        } else if (self.selectedGeoCode === '06') {
+          this.displayMayotte = ''
+        } else {
+          this.displayFrance = ''
+        }
+
+        const values = []
+        this.indicateur_data.departements.forEach(function (d) {
+          const depObj = store.state.dep.find(obj => {
+            return obj.value === d.code_level
+          })
+          if (typeof depObj !== 'undefined') {
+            const parentRegion = depObj.region_value
+            if (parentRegion === self.selectedGeoCode) {
+              values.push(parseInt(d.last_value))
+            }
+          }
+        })
+        this.scaleMin = Math.min.apply(null, values)
+        this.scaleMax = Math.max.apply(null, values)
+        this.leftColProps.min = this.scaleMin
+        this.leftColProps.max = this.scaleMax
+        let x
+        this.indicateur_data.trendType === 'normal' ? x = d3.scaleLinear().domain([this.scaleMin, this.scaleMax]).range(['#ffc700', '#715845']) : x = d3.scaleLinear().domain([this.scaleMin, this.scaleMax]).range(['#715845', '#ffc700'])
+
         this.indicateur_data.departements.forEach(function (d) {
           const elCol = parentWidget.getElementsByClassName('FR-' + d.code_level)
           const depObj = store.state.dep.find(obj => {
@@ -195,10 +326,36 @@ export default {
             if (parentRegion === self.selectedGeoCode) {
               elCol.length !== 0 && elCol[0].setAttribute('fill', x(d.last_value))
             } else {
-              elCol.length !== 0 && elCol[0].setAttribute('fill', 'rgba(247, 237, 211, 0.72)')
+              elCol.length !== 0 && elCol[0].setAttribute('fill', 'rgba(255, 255, 255, 0)')
             }
           }
         })
+        const allDep = store.state.dep.filter(obj => {
+          return obj.region_value === self.selectedGeoCode
+        })
+
+        let xmin = []
+        let ymin = []
+        let xmax = []
+        let ymax = []
+
+        allDep.forEach(function (dep) {
+          const polygon = document.querySelector('.FR-' + dep.value).getBBox()
+
+          xmin.push(polygon.x)
+          ymin.push(polygon.y)
+          xmax.push(polygon.x + polygon.width)
+          ymax.push(polygon.y + polygon.height)
+        })
+
+        xmin = Math.min.apply(null, xmin)
+        ymin = Math.min.apply(null, ymin)
+        xmax = Math.max.apply(null, xmax)
+        ymax = Math.max.apply(null, ymax)
+        const width = xmax - xmin
+        const height = ymax - ymin
+
+        this.FranceProps.viewBox = xmin + ' ' + ymin + ' ' + width + ' ' + height
       }
     },
 
@@ -335,7 +492,7 @@ export default {
       flex-direction:column;
       align-items:center;
       .map_tooltip{
-        width: 165px;
+        width: 11.25rem;
         height: auto;
         background-color: white;
         position: fixed;
