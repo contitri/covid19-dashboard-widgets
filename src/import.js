@@ -1,3 +1,5 @@
+import BASE_URL from '@/url.js'
+
 export const getData = async function (store) {
   const dep = [
     {
@@ -684,8 +686,10 @@ export const getData = async function (store) {
     }
   ]
 
-  const BASE_URL = 'https://data.widgets.dashboard.covid19.data.gouv.fr'
+  // const BASE_URL = 'https://data.widgets.dashboard.covid19.data.gouv.fr'
   // const BASE_URL = './dist'
+  console.log(BASE_URL)
+
   const url = `${BASE_URL}/period.json`
   fetch(url).then(response => response.json()).then(json => { store.commit('setPeriods', json) })
 
