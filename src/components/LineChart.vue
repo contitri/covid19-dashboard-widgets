@@ -194,13 +194,20 @@ export default {
         self.dataset.push((d.value))
       })
 
-      if (this.indicateur === 'prop_variant_C') {
-        self.color = '#E4794A'
-      } else if (this.indicateur === 'prop_variant_D' || this.indicateur === 'prop_variant_A0C0') {
-        self.color = '#A558A0'
+      console.log(this.indicateur_data.color)
+      if (this.indicateur_data.color !== undefined & this.indicateur_data.color !== 'default') {
+        this.color = this.indicateur_data.color
       } else {
-        self.color = '#000091'
+        this.color = '#000091'
       }
+
+      // if (this.indicateur === 'prop_variant_C') {
+      //   self.color = '#E4794A'
+      // } else if (this.indicateur === 'prop_variant_D' || this.indicateur === 'prop_variant_A0C0') {
+      //   self.color = '#A558A0'
+      // } else {
+      //   self.color = '#000091'
+      // }
     },
     getGeoObject (geolevel, geocode) {
       let geoObject

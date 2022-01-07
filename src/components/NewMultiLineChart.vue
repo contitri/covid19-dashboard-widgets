@@ -152,18 +152,14 @@ export default {
       const listColors = ['#000091', '#007c3a', '#A558A0'].concat(chroma.brewer.Set2.reverse())
       const newColor = Array(this.nbIndicateurs)
       let k = 0
-      let pos = 0
-      this.listIndicateurs.forEach(function (indName) {
-        if (indName === 'prop_variant_C') {
-          newColor[pos] = '#E4794A'
-        } else if (indName === 'prop_variant_D' || indName === 'prop_variant_A0C0') {
-          newColor[pos] = '#A558A0'
+      for (let i = 0; i < this.nbIndicateurs; i++) {
+        if (this.indicateur_data[i].color !== undefined & this.indicateur_data[i].color !== 'default') {
+          newColor[i] = this.indicateur_data[i].color
         } else {
-          newColor[pos] = listColors[k]
+          newColor[i] = listColors[k]
           k = k + 1
         }
-        pos = pos + 1
-      })
+      }
       this.colors = newColor.slice(0, this.nbIndicateurs)
       this.colors_legend = newColor.slice(0, this.nbIndicateurs)
       this.colors_gradient.length = 0
