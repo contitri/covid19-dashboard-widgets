@@ -194,7 +194,6 @@ export default {
         self.dataset.push((d.value))
       })
 
-      console.log(this.indicateur_data.color)
       if (this.indicateur_data.color !== undefined & this.indicateur_data.color !== 'default') {
         this.color = this.indicateur_data.color
       } else {
