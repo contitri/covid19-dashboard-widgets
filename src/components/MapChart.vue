@@ -82,7 +82,8 @@ export default {
         opacity: [1]
       },
       FranceProps: {
-        viewBox: '0 0 262 250'
+        viewBox: '0 0 262 262',
+        displayDep: {}
       },
       scaleMin: 0,
       scaleMax: 0,
@@ -182,8 +183,10 @@ export default {
         this.leftColProps.max = this.scaleMax
         let x
         this.indicateur_data.trendType === 'normal' ? x = d3.scaleLinear().domain([this.scaleMin, this.scaleMax]).range(['#ffc700', '#715845']) : x = d3.scaleLinear().domain([this.scaleMin, this.scaleMax]).range(['#715845', '#ffc700'])
-        this.FranceProps.viewBox = '0 0 262 250'
+        this.FranceProps.viewBox = '0 0 262 262'
+        this.FranceProps.displayDep = {}
         this.indicateur_data.departements.forEach(function (d) {
+          self.FranceProps.displayDep['FR-' + d.code_level] = ''
           const elCol = parentWidget.getElementsByClassName('FR-' + d.code_level)
           elCol.length !== 0 && elCol[0].setAttribute('fill', x(d.last_value))
         })
@@ -242,14 +245,16 @@ export default {
             const reg = regDep.region_value
             if (d.code_level === geocode) {
               elCol.length !== 0 && elCol[0].setAttribute('fill', x(d.last_value))
+              self.FranceProps.displayDep['FR-' + d.code_level] = ''
             } else if (reg === regValue) {
               elCol.length !== 0 && elCol[0].setAttribute('fill', 'rgba(247, 237, 211, 0.72)')
+              self.FranceProps.displayDep['FR-' + d.code_level] = ''
             } else {
               elCol.length !== 0 && elCol[0].setAttribute('fill', 'rgba(255, 255, 255, 0)')
+              self.FranceProps.displayDep['FR-' + d.code_level] = 'none'
             }
           }
         })
-
         const allDep = store.state.dep.filter(obj => {
           return obj.region_value === regValue
         })
@@ -274,8 +279,9 @@ export default {
         ymax = Math.max.apply(null, ymax)
         const width = xmax - xmin
         const height = ymax - ymin
+        const size = Math.max(width, height)
 
-        this.FranceProps.viewBox = xmin + ' ' + ymin + ' ' + width + ' ' + height
+        this.FranceProps.viewBox = xmin + ' ' + ymin + ' ' + size + ' ' + size
       } else {
         this.displayFrance = 'none'
         this.displayGuadeloupe = 'none'
@@ -316,6 +322,7 @@ export default {
         let x
         this.indicateur_data.trendType === 'normal' ? x = d3.scaleLinear().domain([this.scaleMin, this.scaleMax]).range(['#ffc700', '#715845']) : x = d3.scaleLinear().domain([this.scaleMin, this.scaleMax]).range(['#715845', '#ffc700'])
 
+        self.FranceProps.displayDep = {}
         this.indicateur_data.departements.forEach(function (d) {
           const elCol = parentWidget.getElementsByClassName('FR-' + d.code_level)
           const depObj = store.state.dep.find(obj => {
@@ -325,11 +332,14 @@ export default {
             const parentRegion = depObj.region_value
             if (parentRegion === self.selectedGeoCode) {
               elCol.length !== 0 && elCol[0].setAttribute('fill', x(d.last_value))
+              self.FranceProps.displayDep['FR-' + d.code_level] = ''
             } else {
               elCol.length !== 0 && elCol[0].setAttribute('fill', 'rgba(255, 255, 255, 0)')
+              self.FranceProps.displayDep['FR-' + d.code_level] = 'none'
             }
           }
         })
+        console.log(self.FranceProps.displayDep)
         const allDep = store.state.dep.filter(obj => {
           return obj.region_value === self.selectedGeoCode
         })
@@ -355,7 +365,9 @@ export default {
         const width = xmax - xmin
         const height = ymax - ymin
 
-        this.FranceProps.viewBox = xmin + ' ' + ymin + ' ' + width + ' ' + height
+        const size = Math.max(width, height)
+
+        this.FranceProps.viewBox = xmin + ' ' + ymin + ' ' + size + ' ' + size
       }
     },
 
